@@ -5,6 +5,8 @@ From Categories Require Import Category.Main.
 From Categories Require Import Functor.Main.
 From Categories Require Import NatTrans.NatTrans NatTrans.Func_Cat.
 From Categories Require Import Basic_Cons.Product.
+From Categories Require Import Prod_Cat.Prod_Cat.
+     
 
 Section Product_Fun.
 
@@ -16,18 +18,79 @@ Section Product_Fun.
   (** The pointwise product presheaf. *)
   Program Definition pointwise_product : Func_Cat C D :=
     {|
-        FO :=
-      (* ; FA := *)
+        FO := fun c => ((Prod_Func D HP) _o (F _o c, G _o c))%object;
+
+        FA := fun a b (f : (a –≻ b)%morphism) =>
+                (@FA (D × D) D (Prod_Func D HP)
+                     ((F _o a, G _o a))%object
+                     ((F _o b, G _o b))%object ((F _a f) , (G _a f)))%morphism
     |}.
 
+  Next Obligation.
+  Proof.
+    rewrite F_id.
+    rewrite F_id.
+    apply (F_id (Prod_Func D HP) ((F _o)%object c, ((G _o)%object c))).
+  Qed.
+
+  Next Obligation.
+  Proof.
+    rewrite !F_compose.
+    apply (@F_compose _ _ (Prod_Func D HP)
+                            (F _o a , G _o a)
+                            (F _o b , G _o b)
+                            (F _o c , G _o c)
+                            ((F _a f, G _a f))
+                            ((F _a g, G _a g)))%object%morphism.
+  Qed.
+    
   Program Definition Fun_Product : (F × G)%object :=
     {|
-      product := (* TODO *) 
-      (* ; Pi_1 := (* TODO *) ; *)
-      (* Pi_2 := (* TODO *) ; *)
-      (* Prod_morph_ex := *)
+      product := pointwise_product; (* TODO *) 
+      Pi_1 :=
+        {|
+          Trans := fun c => Pi_1
+        |};
+
+      Pi_2 :=
+        {|
+          Trans := fun c => Pi_2
+        |};
+
+      Prod_morph_ex := fun H α1 α2 => 
+        ({|
+            Trans := fun c => Prod_morph_ex ( HP (F _o c) (G _o c)) (H _o c)
+                                         (Trans α1 c)
+                                         (Trans α2 c)
+        |})%object
     |}.
 
+  Next Obligation.
+  Proof.
+    apply Prod_morph_com_1.
+  Qed.
+
+  Next Obligation.
+  Proof.
+    rewrite Prod_morph_com_1.
+    reflexivity.  (* Qs: 1. When do I use apply and when rewrite?
+                         2. Why did I need to use reflexivity? *) 
+  Qed.
+
+
+  (* Now repeat for Pi_2. Would do in one fell swoop for arbitrary limits *)
+  Next Obligation.
+    apply Prod_morph_com_2.
+  Qed.
+
+  Next Obligation.
+    rewrite Prod_morph_com_2.
+    reflexivity.
+  Qed.
+
+  Next Obligation.
+
+  Qed.
 End Product_Fun.
       
                  
