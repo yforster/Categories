@@ -75,8 +75,7 @@ Section Product_Fun.
   Next Obligation.
   Proof.
     rewrite Prod_morph_com_1.
-    reflexivity.  (* Qs: 1. When do I use apply and when rewrite?
-                         2. Why did I need to use reflexivity? *) 
+    reflexivity.  
   Qed.
 
   (* Now repeat for Pi_2. Would do in one fell swoop for arbitrary limits *)
@@ -160,20 +159,6 @@ Section Product_Fun.
     now apply (Prod_morph_unique _ _ (Trans r1 x)  (Trans r2 x)).
     (* YF: The goal is exactly an assumption. So the tactic "assumption" would have worked (instead of "rewrite H. reflexivity."). *)
     (* YF: now tactic. is the same as tactic; trivial. and trivial subsumes reflexivity and assumption *)
-    
-    (* apply (Prod_morph_unique _ _ (Trans r1 x)  (Trans r2 x)). *)
-
-    (* + rewrite H. *)
-    (*   reflexivity. *)
-
-    (* + rewrite H0. *)
-    (*   reflexivity. *)
-
-    (* + rewrite H1. *)
-    (*   reflexivity. *)
-
-    (* + rewrite H2. *)
-    (*   reflexivity. *)
   Qed.
 End Product_Fun.
       
