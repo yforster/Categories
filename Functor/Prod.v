@@ -157,7 +157,23 @@ Section Product_Fun.
       [ H : _ = _ |- _ ] => apply (f_equal (fun y => Trans y x)) in H
     end.
     cbn in *.
-    now apply (Prod_morph_unique _ _ (Trans r1 x)  (Trans r2 x)).    
+    now apply (Prod_morph_unique _ _ (Trans r1 x)  (Trans r2 x)).
+    (* YF: The goal is exactly an assumption. So the tactic "assumption" would have worked (instead of "rewrite H. reflexivity."). *)
+    (* YF: now tactic. is the same as tactic; trivial. and trivial subsumes reflexivity and assumption *)
+    
+    (* apply (Prod_morph_unique _ _ (Trans r1 x)  (Trans r2 x)). *)
+
+    (* + rewrite H. *)
+    (*   reflexivity. *)
+
+    (* + rewrite H0. *)
+    (*   reflexivity. *)
+
+    (* + rewrite H1. *)
+    (*   reflexivity. *)
+
+    (* + rewrite H2. *)
+    (*   reflexivity. *)
   Qed.
 End Product_Fun.
       
