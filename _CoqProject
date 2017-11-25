@@ -16,6 +16,7 @@ Ext_Cons/Prod_Cat/Prod_Cat.v
 Ext_Cons/Prod_Cat/Operations.v
 Ext_Cons/Prod_Cat/Nat_Facts.v
 Ext_Cons/Prod_Cat/Main.v
+Ext_Cons/Prod_Cat/Prod_Facts.v
 Ext_Cons/Arrow.v
 Ext_Cons/Comma.v
 Ext_Cons/Main.v

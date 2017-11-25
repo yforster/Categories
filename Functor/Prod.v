@@ -6,12 +6,16 @@ From Categories Require Import Functor.Main.
 From Categories Require Import NatTrans.NatTrans NatTrans.Func_Cat.
 From Categories Require Import Basic_Cons.Product.
 From Categories Require Import Prod_Cat.Prod_Cat.
-     
 
 Section Product_Fun.
 
   Context {C D : Category}.
-  Context {F G : Func_Cat C D}. (* Note: For reasons that I don't understand, this is not $-\succ$, but some fancy $\minus\succ$ that has to be copy-pasted *)
+  Context {F G : Func_Cat C D}. (* Note: For reasons that I don't
+                                   understand, this is not $-\succ$,
+                                   but some fancy $\minus\succ$ that
+                                   has to be copy-pasted 
+                                 OK: the - is in fact an en dash – (u2013)
+                                 *)
 
   Hypothesis HP : Has_Products D.
 
@@ -89,6 +93,38 @@ Section Product_Fun.
   Qed.
 
   Next Obligation.
+    apply ((Prod_morph_unique (HP (F _o c') (G _o c')) (H _o c) 
+             ((Trans α1 c') ∘ (H _a h))
+             ((Trans α2 c') ∘ (H _a h))
+           )%object%morphism).
+    + rewrite <- assoc .
+      rewrite Prod_morph_com_1.
+      reflexivity.
+    (* Similarly for Pi_2: *)  
+    + rewrite <- assoc .
+      rewrite Prod_morph_com_2.
+      reflexivity.
+    + rewrite <- assoc .
+      rewrite Prod_morph_com_1.
+      rewrite assoc.
+      rewrite Prod_morph_com_1.
+      rewrite (Trans_com α1 h).
+      reflexivity.
+    (* Similarly for Pi_2: *)  
+    + rewrite <- assoc .
+      rewrite Prod_morph_com_2.
+      rewrite assoc.
+      rewrite Prod_morph_com_2.
+      rewrite (Trans_com α2 h).
+      reflexivity.
+  Qed.
+
+  From Categories Require Import Ext_Cons.Prod_Cat.Prod_Facts.
+  
+  Next Obligation.
+    (* I want to use Product_after_tuple from Prod_Facts in the last
+    import *)
+    assert (Product_after_tuple).
 
   Qed.
 End Product_Fun.
