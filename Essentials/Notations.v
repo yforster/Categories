@@ -26,6 +26,8 @@ Reserved Notation "C '^op'" (at level 50, no associativity).
 
 Reserved Notation "a –≻ b" (at level 90, b at level 200, right associativity).
 
+Reserved Notation "f =≻ g" (at level 90, g at level 200, right associativity).
+
 Reserved Notation "f '⁻¹'" (at level 50, no associativity).
 
 Reserved Notation "a ≃ b" (at level 70, no associativity).
@@ -33,6 +35,12 @@ Reserved Notation "a ≃ b" (at level 70, no associativity).
 Reserved Notation "a ≃≃ b ::> C" (at level 70, no associativity).
 
 Reserved Notation "f ∘ g" (at level 51, right associativity).
+
+Reserved Notation "θ • η" (at level 51, right associativity).
+
+Reserved Notation "η ◃ f" (at level 51, right associativity).
+
+Reserved Notation "h ▹ η" (at level 51, right associativity).
 
 Reserved Notation "f '∘_h' g" (at level 51, right associativity).
 
@@ -81,3 +89,5 @@ Delimit Scope natiso_scope with natiso.
 Delimit Scope isomorphism_scope with isomorphism.
 
 Delimit Scope preorder_scope with preorder.
+
+Delimit Scope bicategory_scope with bicategory.
