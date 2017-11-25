@@ -32,8 +32,7 @@ Section Product_Fun.
 
   Next Obligation.
   Proof.
-    rewrite F_id.
-    rewrite F_id.
+    rewrite !F_id.
     apply (F_id (Prod_Func D HP) ((F _o)%object c, ((G _o)%object c))).
   Qed.
 
@@ -79,7 +78,6 @@ Section Product_Fun.
     reflexivity.  (* Qs: 1. When do I use apply and when rewrite?
                          2. Why did I need to use reflexivity? *) 
   Qed.
-
 
   (* Now repeat for Pi_2. Would do in one fell swoop for arbitrary limits *)
   Next Obligation.
@@ -128,20 +126,17 @@ Section Product_Fun.
     rewrite W.
     rewrite <- (Trans_com α1 h).
     rewrite <- (Trans_com α2 h).
-    pose (Product_precomposition
+    
+    now rewrite (Product_precomposition
             (H _a h)
             (Trans α1 c')
             (Trans α2 c')
-         )%morphism as V.
-    simpl in V.
-    rewrite V.
-    reflexivity.
+         )%morphism.
   Qed.
 
   Next Obligation.
     apply NatTrans_eq_simplify.
-    extensionality x.
-    cbn in *.
+    extensionality x. cbn in *.
     rewrite Prod_morph_com_1.
     reflexivity.
   Qed.
@@ -162,8 +157,7 @@ Section Product_Fun.
       [ H : _ = _ |- _ ] => apply (f_equal (fun y => Trans y x)) in H
     end.
     cbn in *.
-    apply (Prod_morph_unique _ _ (Trans r1 x)  (Trans r2 x)).
-    
+    now apply (Prod_morph_unique _ _ (Trans r1 x)  (Trans r2 x)).    
   Qed.
 End Product_Fun.
       

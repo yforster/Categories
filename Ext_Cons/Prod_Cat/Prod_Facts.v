@@ -31,27 +31,14 @@ Section Prod_Properties.
       )%morphism.
 
   Proof.
-    intros a b1 b2 c1 c2 f1 f2 g1 g2.
-    apply (Prod_morph_unique _ _
-           (g1 ∘ f1) (g2 ∘ f2)
-          )%morphism.
-    + rewrite <- assoc.
-      cbn.
-      rewrite Prod_morph_com_1.
-      rewrite assoc.
-      rewrite Prod_morph_com_1.
-      reflexivity.
-    (* Similarly for Pi_2 *)
-    + rewrite <- assoc.
-      cbn.
-      rewrite Prod_morph_com_2.
-      rewrite assoc.
-      rewrite Prod_morph_com_2.
-      reflexivity.
-    + rewrite Prod_morph_com_1.
-      reflexivity.
-    + rewrite Prod_morph_com_2.
-      reflexivity.
+    intros.
+    eapply Prod_morph_unique.
+    + rewrite <- assoc. cbn.
+      now rewrite Prod_morph_com_1, assoc, Prod_morph_com_1.
+    + rewrite <- assoc. cbn.
+      now rewrite Prod_morph_com_2, assoc, Prod_morph_com_2.
+    + now rewrite Prod_morph_com_1.
+    + now rewrite Prod_morph_com_2.
   Qed.
 
   Lemma Product_precomposition : 
@@ -67,22 +54,11 @@ Section Prod_Properties.
 
   Proof.
     intros a b c1 c2 f g1 g2.
-    apply (Prod_morph_unique _ _
-                             (g1 ∘ f) (g2 ∘ f)
-          )%morphism.    
-    + rewrite <- assoc.
-      rewrite Prod_morph_com_1.
-      reflexivity.
-
-    + rewrite <- assoc.
-      rewrite Prod_morph_com_2.
-      reflexivity.
-
-    + rewrite Prod_morph_com_1.
-      reflexivity.
-
-    + rewrite Prod_morph_com_2.
-      reflexivity.
+    eapply Prod_morph_unique.
+    + now rewrite <- assoc, Prod_morph_com_1.
+    + now rewrite <- assoc, Prod_morph_com_2.
+    + now rewrite Prod_morph_com_1.
+    + now rewrite Prod_morph_com_2.
   Qed.
 
 End Prod_Properties.
