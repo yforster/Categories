@@ -137,6 +137,34 @@ Section Product_Fun.
     rewrite V.
     reflexivity.
   Qed.
+
+  Next Obligation.
+    apply NatTrans_eq_simplify.
+    extensionality x.
+    cbn in *.
+    rewrite Prod_morph_com_1.
+    reflexivity.
+  Qed.
+
+  (* And similarly for Pi_2 *)
+  Next Obligation.
+    apply NatTrans_eq_simplify.
+    extensionality x.
+    cbn in *.
+    rewrite Prod_morph_com_2.
+    reflexivity.
+  Qed.
+
+  Next Obligation.
+    apply NatTrans_eq_simplify.
+    extensionality x.
+    repeat match goal with
+      [ H : _ = _ |- _ ] => apply (f_equal (fun y => Trans y x)) in H
+    end.
+    cbn in *.
+    apply (Prod_morph_unique _ _ (Trans r1 x)  (Trans r2 x)).
+    
+  Qed.
 End Product_Fun.
       
                  
