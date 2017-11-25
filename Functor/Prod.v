@@ -6,6 +6,8 @@ From Categories Require Import Functor.Main.
 From Categories Require Import NatTrans.NatTrans NatTrans.Func_Cat.
 From Categories Require Import Basic_Cons.Product.
 From Categories Require Import Prod_Cat.Prod_Cat.
+From Categories Require Import Ext_Cons.Prod_Cat.Prod_Facts.
+  
 
 Section Product_Fun.
 
@@ -22,12 +24,10 @@ Section Product_Fun.
   (** The pointwise product presheaf. *)
   Program Definition pointwise_product : Func_Cat C D :=
     {|
-        FO := fun c => ((Prod_Func D HP) _o (F _o c, G _o c))%object;
+        FO := fun c => ((F _o c)%functor ⊠ (G _o c)%functor)%object;
 
-        FA := fun a b (f : (a –≻ b)%morphism) =>
-                (@FA (D × D) D (Prod_Func D HP)
-                     ((F _o a, G _o a))%object
-                     ((F _o b, G _o b))%object ((F _a f) , (G _a f)))%morphism
+        FA := (fun a b (f : a –≻ b) =>
+                 (F _a f) ⊠ (G _a f))%morphism
     |}.
 
   Next Obligation.
@@ -50,7 +50,7 @@ Section Product_Fun.
     
   Program Definition Fun_Product : (F × G)%object :=
     {|
-      product := pointwise_product; (* TODO *) 
+      product := pointwise_product; 
       Pi_1 :=
         {|
           Trans := fun c => Pi_1
@@ -63,10 +63,9 @@ Section Product_Fun.
 
       Prod_morph_ex := fun H α1 α2 => 
         ({|
-            Trans := fun c => Prod_morph_ex ( HP (F _o c) (G _o c)) (H _o c)
-                                         (Trans α1 c)
-                                         (Trans α2 c)
-        |})%object
+            Trans := fun c =>
+                       << (Trans α1 c) , (Trans α2 c) >>                                               
+        |})%morphism
     |}.
 
   Next Obligation.
@@ -119,13 +118,24 @@ Section Product_Fun.
       reflexivity.
   Qed.
 
-  From Categories Require Import Ext_Cons.Prod_Cat.Prod_Facts.
-  
   Next Obligation.
-    (* I want to use Product_after_tuple from Prod_Facts in the last
-    import *)
-    assert (Product_after_tuple).
-
+    pose (Product_after_tuple (Trans α1 c)
+                              (Trans α2 c)
+                              (F _a h)
+                              (G _a h)
+         )%morphism as W.
+    cbn in W.
+    rewrite W.
+    rewrite <- (Trans_com α1 h).
+    rewrite <- (Trans_com α2 h).
+    pose (Product_precomposition
+            (H _a h)
+            (Trans α1 c')
+            (Trans α2 c')
+         )%morphism as V.
+    simpl in V.
+    rewrite V.
+    reflexivity.
   Qed.
 End Product_Fun.
       
