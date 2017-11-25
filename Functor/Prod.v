@@ -163,7 +163,18 @@ Section Product_Fun.
     end.
     cbn in *.
     apply (Prod_morph_unique _ _ (Trans r1 x)  (Trans r2 x)).
-    
+
+    + rewrite H.
+      reflexivity.
+
+    + rewrite H0.
+      reflexivity.
+
+    + rewrite H1.
+      reflexivity.
+
+    + rewrite H2.
+      reflexivity.
   Qed.
 End Product_Fun.
       
