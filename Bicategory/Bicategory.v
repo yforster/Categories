@@ -30,7 +30,7 @@ Cumulative Class Bicategory : Type :=
   iid : forall {a b : Obj} {f : a –≻ b}, (f =≻ f);
 
   vcompose : forall {a b : Obj} {f g h : a –≻ b}
-               {η : Nat f g} {θ : g =≻ h},
+               (η : f =≻ g) (θ : g =≻ h),
                f =≻ h
   where "θ • η" := (vcompose η θ);
                  
@@ -54,12 +54,60 @@ Cumulative Class Bicategory : Type :=
 
   α : forall {a b c d: Obj} {f : a –≻ b} {g : b –≻ c} {h : c –≻ d},
         (h ∘ (g ∘ f)) =≻ (h ∘ g) ∘ f;
+
+  (** axioms **)
+  vleft_unit  : forall {a b : Obj} {f g : a –≻ b} {η : f =≻ g},
+                   η • iid = η;
+
+  vright_unit : forall {a b : Obj} {f g : a –≻ b} {η : f =≻ g},
+                  iid • η = η;
+
+  vassoc : forall {a b : Obj} {f g h i : a –≻ b}
+             {η : f =≻ g} {θ : g =≻ h} {ι : h =≻ i},
+             (ι • (θ • η)) = (ι • θ) • η;
+  
+  wleft_unit  : forall {a b c : Obj} {f : a –≻ b} {g : b –≻ c},
+                 (@iid b c g) ◃ f = iid;
+
+  wright_unit : forall {a b c : Obj} {f : a –≻ b} {g : b –≻ c},
+                  g ▹ (@iid a b f) = iid;
+
+  left_interchange : forall { a b c : Obj} {f : a –≻ b} { g h i : b –≻ c }
+                        {η : g =≻ h} {θ : h =≻ i},
+                       (θ ◃ f) • (η ◃ f) = (θ • η) ◃ f;
+
+  right_interchange : forall { a b c : Obj} {f g h : a –≻ b} { i : b –≻ c }
+                        {η : f =≻ g} {θ : g =≻ h},
+                       (i ▹ θ) • (i ▹ η) = i ▹ (θ • η);
+
+  
 }.
 
 Arguments Obj {_}, _.
-Arguments id {_ _}, {_} _, _ _.
 Arguments Hom {_} _ _, _ _ _.
+Arguments Nat {_} _ _, _ _ _.
+Arguments id {_ _}, {_} _, _ _.
 Arguments compose {_} {_ _ _} _ _, _ {_ _ _} _ _, _ _ _ _ _ _.
+Arguments iid {_} {_ _} {_}, {_} _ _ _, _ _ _ _.
+Arguments vcompose {_} {_ _} {_ _ _} _ _,
+                    _  {_ _} {_ _ _} _ _,
+                    _   _ _   _ _ _  _ _ .
+Arguments lwhisk {_} {_ _ _} {_ _} _ _,
+                  _  {_ _ _} {_ _} _ _,
+                  _   _ _ _   _ _  _ _.
+Arguments rwhisk {_} {_ _ _} {_ _} _ _,
+                  _  {_ _ _} {_ _} _ _,
+                  _   _ _ _   _ _  _ _.
+Arguments ϕ {_} {_ _} {_},
+             _  {_ _} {_},
+             _   _ _   _.
+Arguments ρ {_} {_ _} {_},
+             _  {_ _} {_},
+             _   _ _   _.
+Arguments α {_} {_ _ _ _ } {_ _ _},
+             _  {_ _ _ _ } {_ _ _},
+             _   _ _ _ _    _ _ _.
+
 Arguments assoc {_ _ _ _ _} _ _ _.
 Arguments assoc_sym {_ _ _ _ _} _ _ _.
 
