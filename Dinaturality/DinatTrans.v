@@ -3,10 +3,11 @@ From Categories Require Import Essentials.Types.
 From Categories Require Import Essentials.Facts_Tactics.
 From Categories Require Import Category.Main.
 From Categories Require Import Functor.Functor.
+From Categories Require Import NatTrans.Main.
 From Categories Require Import Cat.Cat.
 From Categories Require Import Prod_Cat.Main.
 
-Section NatTrans.
+Section DinatTrans.
   Context {C D : Category}.
 
 (**
@@ -66,7 +67,7 @@ Trans_com_sym is the symmetric form of Trans_com.
     PIR; trivial.
   Qed.
 
-End NatTrans.
+End DinatTrans.
 
 Arguments Trans {_ _ _ _} _ _.
 Arguments Trans_com {_ _ _ _} _ {_ _} _.
@@ -78,91 +79,86 @@ Notation "F –≻ G" := (DinatTrans F G) : dinattrans_scope.
 
 Local Open Scope dinattrans_scope.
 
-(*
-Section NatTrans_Compose.
-  Context {C C' : Category}.
+Section DinatTrans_Compose.
+  (** Dinatural transformations are not closed under composition, but they are closed under composition with natural transformations. **)
   
-  (** Natural transformations are composable. The arrow family of the result is
-      just the composition of corresponding components in each natural
-      transformation. Graphically:
+  Context {C D : Category}.
+  
+  (** . Graphically:
 #
 <pre>
-         F                            F
-   C ———————————————–> D        C ———————————————–> D 
-           ||                           ||
-           ||N                          ||
-           ||                           ||
-           \/                           ||
-   C ———————————————–> D                || N' ∘ N
-         G                              ||
-           ||                           ||
-           ||N'                         ||
-           ||                           ||
-           \/                           \/
-   C ———————————————–> D        C ———————————————–> D 
-         H                            H
+                   F                                  F            
+       ———————————————————————            ———————————————————————  
+      |           ||          |          |           ||          | 
+      |           ||N         |          |           ||N         | 
+      |           ||          |          |           ||          | 
+      |           \/          v          |           ||          v 
+   C x C^op ———————————————–> D       C x C^op       ||          D 
+      |                       ^          |           ||          ^ 
+      |           ||          |          |           ||          | 
+      |           ||N'        |          |           ||N'        | 
+      |           ||          |          |           ||          | 
+      |           \/          |          |           \/          | 
+       ————————————————————————           ———————————————————————— 
+                   H                                  H            
 </pre>
+
+
+Is dinatural whenever either N natural and N' dinatural or N natural
+and N' dinatural
 #
 
 This kind of composition is sometimes also called vertical composition of
 natural transformations.
 *)
-  Program Definition NatTrans_compose {F F' F'' : (C –≻ C')%functor}
-          (tr : F –≻ F') (tr' : F' –≻ F'') : (F –≻ F'')%nattrans :=
+  Program Definition DinatTrans_Compose {F G H K : (C×C^op –≻ D)%functor}
+          (din : DinatTrans G H)
+          (nt1 : (F–≻ G)%nattrans) (nt2 : (H –≻ K)%nattrans) : (F –≻ K)%dinattrans :=
     {|
-      Trans := fun c : Obj => ((Trans tr' c) ∘ (Trans tr c)) % morphism
+      Trans := fun c : Obj => ((NatTrans.Trans nt2 (c,c)) ∘ (Trans din c) ∘ (NatTrans.Trans nt1 (c,c)))%morphism
     |}.
 
   Next Obligation. (* Trans_com*)
+
+  Require Import Setoid.
+
+  
   Proof.
+    rewrite assoc at 1.
+    rewrite assoc at 1.
+    rewrite (NatTrans.Trans_com nt1). 
+    rewrite <- assoc.
+    setoid_rewrite <- (NatTrans.Trans_com nt2).
     rewrite assoc.
-    rewrite Trans_com.
-    rewrite assoc_sym.
-    rewrite Trans_com; auto.
+    rewrite <- (assoc _ ((G _a) _) _).
+    rewrite <- (assoc _ _ (H _a _)).
+    setoid_rewrite (Trans_com din h).
+    rewrite <- assoc.
+    rewrite <- assoc.
+    rewrite (NatTrans.Trans_com nt2).
+    rewrite assoc.
+    rewrite assoc.
+    rewrite assoc.
+    rewrite <- (NatTrans.Trans_com nt1).
+    repeat rewrite assoc.
+    reflexivity.
   Qed.
 
   Next Obligation. (* Trans_com_sym *)
   Proof.
     symmetry.
-    apply NatTrans_compose_obligation_1.
+    apply DinatTrans_Compose_obligation_1.
   Qed.
 
-End NatTrans_Compose.
+    Program Definition DinatTrans_Compose_Nat {F G H: (C×C^op –≻ D)%functor}
+          (din : DinatTrans G H)
+          (nt : (F–≻ G)%nattrans) : (F –≻ H)%dinattrans :=
+    DinatTrans_Compose din nt (NatTrans_id _).
 
-Notation "N ∘ N'" := (NatTrans_compose N' N) : nattrans_scope.
+    Program Definition Nat_Compose_DinatTrans {G H K: (C×C^op –≻ D)%functor}
+          
+          (nt : (H –≻ K)%nattrans)  (din : DinatTrans G H): (G –≻ K)%dinattrans :=
+    DinatTrans_Compose din (NatTrans_id _) nt.
+End DinatTrans_Compose.
 
-Section NatTrans_Props.
-  Context {C C' : Category}.
-  
-  (** The composition of natural transformations is associative. *)
-  Theorem NatTrans_compose_assoc {F G H I : (C –≻ C')%functor} (N : F –≻ G)
-          (N' : G –≻ H) (N'' : H –≻ I)
-    : ((N'' ∘ N') ∘ N = N'' ∘ (N' ∘ N))%nattrans
-  .
-  Proof.
-    apply NatTrans_eq_simplify; cbn; auto.
-  Qed.
 
-  (** The identity natural transformation. The arrow family are just
-      all identity arrows: *)
-  Program Definition NatTrans_id (F : (C –≻ C')%functor) : F –≻ F :=
-    {|
-      Trans := fun x : Obj => id
-    |}.
-
-  Theorem NatTrans_id_unit_left {F G : (C –≻ C')%functor} (N : F –≻ G)
-    : (NatTrans_id G) ∘ N = N.
-  Proof.
-    apply NatTrans_eq_simplify; cbn; auto.
-  Qed.
-
-  Theorem NatTrans_id_unit_right {F G : (C –≻ C')%functor} (N : F –≻ G)
-    : N ∘ (NatTrans_id F) = N.
-  Proof.
-    apply NatTrans_eq_simplify; cbn; auto.
-  Qed.
-  
-End NatTrans_Props.
-
-Hint Resolve NatTrans_eq_simplify.
-*)
