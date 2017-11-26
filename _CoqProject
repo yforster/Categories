@@ -176,6 +176,14 @@ PreSheaf/Topos.v
 Bicategory/Bicategory.v
 Bicategory/Main.v
 
+#Dinaturality:
+Dinaturality/DinatTrans.v
+Dinaturality/Main.v
+
+#Bimodule:
+Bimodule/Bimodule.v
+Bimodule/Main.v
+
 #Demo:
 Demo/Demo.v
 

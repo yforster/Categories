@@ -82,7 +82,7 @@ Delimit Scope functor_scope with functor.
 
 Delimit Scope nattrans_scope with nattrans.
 
-Delimit Scope nattrans_scope with nattrans.
+Delimit Scope dinattrans_scope with dinattrans.
 
 Delimit Scope natiso_scope with natiso.
 
