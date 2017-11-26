@@ -1,2 +1,2 @@
-From Categories Require Export Category.Category.
+From Categories Require Export Bicategory.Bicategory.
 
