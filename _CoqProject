@@ -172,6 +172,9 @@ PreSheaf/SubObject_Classifier.v
 PreSheaf/CCC.v
 PreSheaf/Topos.v
 
+#Bicategory:
+Bicategory/Bicategory.v
+Bicategory/Main.v
 
 #Demo:
 Demo/Demo.v
