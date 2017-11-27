@@ -58,11 +58,10 @@ Ltac do_simpl_in x :=
   repeat rewrite assoc in x;
   simpl_ids in x.
 
-Tactic Notation "a_rewrite'" constr(normal) open_constr(H) tactic(rewr)  :=
+Tactic Notation "a_rewrite'" open_constr(H) tactic(rewr)  :=
   let x := fresh "E" in
   epose (x := H);
   do_simpl_in x;
-  match normal with true => idtac | false => symmetry in x end;
   do_simpl;
   rewr x; clear x; repeat rewrite assoc.
 
@@ -70,37 +69,32 @@ Ltac do_rewrite H := rewrite H.
                                      
 Tactic Notation "a_rewrite" open_constr(H) :=
   match goal with
-    | [ |- _ ∘ _ = _ ] => a_rewrite' true H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite H) x)
-    | [ |- _ = _ ∘ _ ] => symmetry; (a_rewrite' true H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite H) x)); symmetry
+    | [ |- _ ∘ _ = _ ] => a_rewrite' H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite H) x)
+    | [ |- _ = _ ∘ _ ] => symmetry; (a_rewrite' H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite H) x)); symmetry
 
-    | _ => a_rewrite' true H (fun H => setoid_rewrite H)
+    | _ => a_rewrite' H (fun H => setoid_rewrite H)
   end.
 
 Tactic Notation "a_rewrite" "<-" open_constr(H) :=
   match goal with
-    | [ |- _ ∘ _ = _ ] => a_rewrite' true H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite <- H) x)
-    | [ |- _ = _ ∘ _ ] => symmetry; (a_rewrite' true H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite <- H) x)); symmetry
+    | [ |- _ ∘ _ = _ ] => a_rewrite' H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite <- H) x)
+    | [ |- _ = _ ∘ _ ] => symmetry; (a_rewrite' H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite <- H) x)); symmetry
 
-    | _ => a_rewrite' true H (fun H => setoid_rewrite <- H)
+    | _ => a_rewrite' H (fun H => setoid_rewrite <- H)
   end.
 
-(* Tactic Notation "a_rewrite_in" constr(normal) open_constr(H) hyp(In)  := *)
-(*   let x := fresh "E" in *)
-(*   epose (x := H); *)
-(*   do_simpl_in x; *)
-(*   match normal with true => idtac | false => symmetry in x end; *)
-(*   do_simpl; *)
-(*   a_rewrite_rec 0 x; clear x; repeat rewrite assoc. *)
+Tactic Notation "a_rewrite" open_constr(H) "in" hyp(H1) :=
+  match goal with
+    | [ |- _ ∘ _ = _ ] => a_rewrite' H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite H in H1) x)
+    | [ |- _ = _ ∘ _ ] => symmetry; (a_rewrite' H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite H in H1) x)); symmetry
 
-(* Tactic Notation "a_rewrite" open_constr(H) "in" hyp(H1) := *)
-(*   match type_of H1 with *)
-(*     | [ _ ∘ _ = _ ] => a_rewrite_in true H H1 *)
-(*     | [ _ = _ ∘ _ ] => symmetry; (a_rewrite_in true H H'); symmetry *)
-(*   end. *)
+    | _ => a_rewrite' H (fun H => setoid_rewrite H in H1)
+  end.
 
-(* Tactic Notation "a_rewrite" "<-" open_constr(H) "in" hyp(H1) := *)
-(*   match type_of H1 with *)
-(*     | [ _ ∘ _ = _ ] => a_rewrite_in false H H1 *)
-(*     | [ _ = _ ∘ _ ] => symmetry; (a_rewrite_in false H H'); symmetry *)
-(*   end. *)
+Tactic Notation "a_rewrite" "<-" open_constr(H) "in" hyp(H1) :=
+  match goal with
+    | [ |- _ ∘ _ = _ ] => a_rewrite' H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite <- H in H1) x)
+    | [ |- _ = _ ∘ _ ] => symmetry; (a_rewrite' H (fun x => a_rewrite_rec 0 (fun H => setoid_rewrite <- H in H1) x)); symmetry
 
+    | _ => a_rewrite' H (fun H => setoid_rewrite <- H in H1)
+  end.
