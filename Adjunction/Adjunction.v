@@ -7,7 +7,6 @@ From Categories Require Import Functor.Main.
 From Categories Require Import Functor.Representable.Hom_Func
         Functor.Representable.Hom_Func_Prop.
 From Categories Require Import NatTrans.Main.
-From Categories Require Import Essentials.AssocRewrite.
 
 Local Open Scope functor_scope.
 
@@ -150,8 +149,11 @@ Section Adjunction.
     Next Obligation.
     Proof.
       intros c d f; cbn.
-      a_rewrite <- (Trans_com (ucu_adj_unit Adj) f).
-      a_rewrite (f_equal (fun w => Trans w d) (ucu_adj_right_id Adj)).
+      rewrite F_compose; rewrite assoc.
+      cbn_rewrite <- (Trans_com (ucu_adj_unit Adj) f).
+      rewrite assoc_sym.
+      set (W := f_equal (fun w => Trans w d) (ucu_adj_right_id Adj));
+        cbn in W; repeat rewrite F_id in W; simpl_ids in W; rewrite W.
       auto.
     Qed.      
 
@@ -215,7 +217,7 @@ Section Adjunction.
       rewrite F_compose.
       rewrite F_id.
       rewrite assoc.
-      a_rewrite <- (@Trans_com
+      cbn_rewrite <- (@Trans_com
                        _ _ _ _ (adj_unit Adj) _ _ (Trans (adj_unit Adj) x)). 
       rewrite assoc_sym.
       simpl_ids; trivial.

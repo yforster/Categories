@@ -4,7 +4,6 @@ From Categories Require Import Essentials.Facts_Tactics.
 From Categories Require Import Category.Main.
 From Categories Require Import Functor.Functor.
 From Categories Require Import Cat.Cat.
-From Categories Require Import Essentials.AssocRewrite.
 
 Section NatTrans.
   Context {C C' : Category}.
@@ -106,7 +105,10 @@ natural transformations.
 
   Next Obligation. (* Trans_com*)
   Proof.
-    repeat a_rewrite (@Trans_com).
+    rewrite assoc.
+    rewrite Trans_com.
+    rewrite assoc_sym.
+    rewrite Trans_com; auto.
   Qed.
 
   Next Obligation. (* Trans_com_sym *)
