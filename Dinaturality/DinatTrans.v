@@ -6,6 +6,7 @@ From Categories Require Import Functor.Functor.
 From Categories Require Import NatTrans.Main.
 From Categories Require Import Cat.Cat.
 From Categories Require Import Prod_Cat.Main.
+From Categories Require Import Essentials.AssocRewrite.
 
 Section DinatTrans.
   Context {C D : Category}.
@@ -66,7 +67,7 @@ Trans_com_sym is the symmetric form of Trans_com.
     ElimEq.
     PIR; trivial.
   Qed.
-
+ 
 End DinatTrans.
 
 Arguments Trans {_ _ _ _} _ _.
@@ -103,7 +104,7 @@ Section DinatTrans_Compose.
                    H                                  H            
 </pre>
 
-
+ 
 Is dinatural whenever either N natural and N' dinatural or N natural
 and N' dinatural
 #
@@ -119,31 +120,15 @@ natural transformations.
     |}.
 
   Next Obligation. (* Trans_com*)
-
-  Require Import Setoid.
-
   
   Proof.
-    rewrite assoc at 1.
-    rewrite assoc at 1.
-    rewrite (NatTrans.Trans_com nt1). 
-    rewrite <- assoc.
-    setoid_rewrite <- (NatTrans.Trans_com nt2).
-    rewrite assoc.
-    rewrite <- (assoc _ ((G _a) _) _).
-    rewrite <- (assoc _ _ (H _a _)).
-    setoid_rewrite (Trans_com din h).
-    rewrite <- assoc.
-    rewrite <- assoc.
-    rewrite (NatTrans.Trans_com nt2).
-    rewrite assoc.
-    rewrite assoc.
-    rewrite assoc.
-    rewrite <- (NatTrans.Trans_com nt1).
-    repeat rewrite assoc.
-    reflexivity.
+    a_rewrite (NatTrans.Trans_com nt1).
+    a_rewrite <- (NatTrans.Trans_com nt2).
+    a_rewrite (Trans_com din h).
+    a_rewrite (NatTrans.Trans_com nt2).
+    now a_rewrite <- (NatTrans.Trans_com nt1).
   Qed.
-
+  
   Next Obligation. (* Trans_com_sym *)
   Proof.
     symmetry.
