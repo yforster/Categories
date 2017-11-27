@@ -5,6 +5,8 @@ From Categories Require Import Category.Main.
 From Categories Require Import Functor.Main.
 From Categories Require Import Adjunction.Adjunction Adjunction.Duality.
 From Categories Require Import NatTrans.NatTrans.
+From Categories Require Import Essentials.AssocRewrite.
+
 
 Local Open Scope functor_scope.
 (** Adjunctions form a category Adj where objects are categories and an arrow 
@@ -34,12 +36,10 @@ Section Adjunct_Compose.
 
   Next Obligation.
   Proof.
-    rewrite assoc.
-    set (W := (Trans_com (adj_unit adj) h)); cbn in W; rewrite W; clear W.
-    rewrite assoc_sym.
+    a_rewrite (Trans_com (adj_unit adj) h).
     set (W := f_equal (G _a)%morphism
                       (Trans_com (adj_unit adj') ((F _a) h)%morphism));
-      cbn in W; rewrite F_compose in W; rewrite W.
+      cbn in W; rewrite F_compose in W; a_rewrite W.
     repeat rewrite F_compose.
     auto.
   Qed.    

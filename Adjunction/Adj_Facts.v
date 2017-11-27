@@ -12,6 +12,8 @@ From Categories Require Import Adjunction.Adjunction Adjunction.Duality.
 From Categories Require Import Cat.Cat Cat.Exponential Cat.Exponential_Facts.
 From Categories Require Import Yoneda.Yoneda.
 From Categories Require Import Functor.Functor_Extender.
+From Categories Require Import Essentials.AssocRewrite.
+    
 
 Local Open Scope functor_scope.
 
@@ -211,9 +213,7 @@ Section Hom_Adjunct_Lifted.
     cbn in *.
     repeat rewrite F_id; simpl_ids.
     repeat rewrite F_compose.
-    repeat rewrite assoc.
-    cbn_rewrite (@Trans_com _ _ _ _ (ucu_adj_unit adj) _ _ (Trans h1 x)).
-    trivial.
+    now a_rewrite (@Trans_com _ _ _ _ (ucu_adj_unit adj) _ _ (Trans h1 x)).
   Qed.    
 
   Next Obligation.
