@@ -1,3 +1,4 @@
+From Categories Require Import Essentials.AssocRewrite.
 From Categories Require Import Essentials.Notations.
 From Categories Require Import Essentials.Types.
 From Categories Require Import Essentials.Facts_Tactics.
@@ -7,7 +8,6 @@ From Categories Require Import NatTrans.NatTrans NatTrans.Func_Cat.
 From Categories Require Import Basic_Cons.Product.
 From Categories Require Import Prod_Cat.Prod_Cat.
 From Categories Require Import Ext_Cons.Prod_Cat.Prod_Facts.
-  
 
 Section Product_Fun.
 
@@ -93,44 +93,26 @@ Section Product_Fun.
              ((Trans α1 c') ∘ (H _a h))
              ((Trans α2 c') ∘ (H _a h))
            )%object%morphism).
-    + rewrite <- assoc .
-      rewrite Prod_morph_com_1.
-      reflexivity.
+    + now a_rewrite Prod_morph_com_1.
     (* Similarly for Pi_2: *)  
-    + rewrite <- assoc .
-      rewrite Prod_morph_com_2.
-      reflexivity.
-    + rewrite <- assoc .
-      rewrite Prod_morph_com_1.
-      rewrite assoc.
-      rewrite Prod_morph_com_1.
-      rewrite (Trans_com α1 h).
-      reflexivity.
+    + now a_rewrite Prod_morph_com_2.
+    + do 2 a_rewrite Prod_morph_com_1.
+      a_rewrite (Trans_com α1 h).
     (* Similarly for Pi_2: *)  
-    + rewrite <- assoc .
-      rewrite Prod_morph_com_2.
-      rewrite assoc.
-      rewrite Prod_morph_com_2.
-      rewrite (Trans_com α2 h).
-      reflexivity.
+    + do 2 a_rewrite Prod_morph_com_2.
+      a_rewrite (Trans_com α2 h).
   Qed.
 
   Next Obligation.
-    pose (Product_after_tuple (Trans α1 c)
-                              (Trans α2 c)
-                              (F _a h)
-                              (G _a h)
-         )%morphism as W.
-    cbn in W.
-    rewrite W.
+    a_rewrite (Product_after_tuple).
     rewrite <- (Trans_com α1 h).
     rewrite <- (Trans_com α2 h).
     
-    now rewrite (Product_precomposition
-            (H _a h)
+    now erewrite (Product_precomposition
+            _
             (Trans α1 c')
             (Trans α2 c')
-         )%morphism.
+         ).
   Qed.
 
   Next Obligation.

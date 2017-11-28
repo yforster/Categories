@@ -1,5 +1,5 @@
 From Categories Require Import Essentials.Notations.
-From Categories Require Import Essentials.Types.
+(* From Categories Require Import Essentials.Types. *)
 From Categories Require Import Essentials.Facts_Tactics.
 From Categories Require Import Category.
 From Categories Require Import Functor.
