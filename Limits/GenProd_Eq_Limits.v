@@ -1,3 +1,4 @@
+From Categories Require Import Essentials.AssocRewrite.
 From Categories Require Import Essentials.Notations.
 From Categories Require Import Essentials.Types.
 From Categories Require Import Essentials.Facts_Tactics.
@@ -71,20 +72,7 @@ Section GenProd_Eq_Complete.
 
       Next Obligation.
       Proof.
-        simpl_ids.
-        set (W :=
-               f_equal
-                 (fun t :
-                        (((Const_Func 1 (((OProd (D _o)) _o) tt)%object)
-                             ∘ (Functor_To_1_Cat (Discr_Cat (Arrow J))))
-                          –≻ (DF DTarg))%nattrans
-                  =>
-                    ((Trans t {|Arr := h|})
-                       ∘ (equalizer_morph (Eqs _ _ Projs D_imgs)))%morphism
-                 )
-                 (cone_morph_com (LRKE_morph_ex HPR D_imgs_Cone))
-            ).
-        set (W' :=
+        a_rewrite (
                f_equal
                  (fun t :
                         (((Const_Func 1 (((OProd (D _o)) _o) tt)%object)
@@ -96,15 +84,16 @@ Section GenProd_Eq_Complete.
                  )
                  (cone_morph_com (LRKE_morph_ex HPR Projs_Cone))
             ).
-        clearbody W W'.
-        rewrite (assoc_sym _ _ ((D _a) h)).
-        cbn in *.
-        fold D_imgs in W.
-        fold Projs in W'.
-        rewrite W'.
-        etransitivity; [|symmetry; apply W].
-        clear W W'.
-        repeat rewrite assoc.
+        a_rewrite ( f_equal
+                 (fun t :
+                        (((Const_Func 1 (((OProd (D _o)) _o) tt)%object)
+                             ∘ (Functor_To_1_Cat (Discr_Cat (Arrow J))))
+                          –≻ (DF DTarg))%nattrans
+                  =>
+                    ((Trans t {|Arr := h|})
+                       ∘ (equalizer_morph (Eqs _ _ Projs D_imgs)))%morphism
+                 )
+                 (cone_morph_com (LRKE_morph_ex HPR D_imgs_Cone))).
         apply (
             f_equal
               (fun f =>
@@ -189,7 +178,7 @@ Section GenProd_Eq_Complete.
           apply NatTrans_eq_simplify.
           extensionality x; cbn.
           unfold Projs, From_Cone_to_OPR.
-          set (H :=
+          a_rewrite <- (
                  f_equal
                    (fun w :
                         ((Projs_Cone
@@ -211,11 +200,7 @@ Section GenProd_Eq_Complete.
                            Projs_Cone
                        )
                    )
-              );
-            clearbody H; cbn in H.
-          repeat rewrite assoc_sym in H.
-          repeat rewrite assoc_sym.
-          etransitivity; [|apply H]; clear H.
+              ).
           set (H :=
                  f_equal
                    (
@@ -265,7 +250,7 @@ Section GenProd_Eq_Complete.
           extensionality x.
           cbn.
           unfold D_imgs, From_Cone_to_OPR.
-          set (H :=
+          a_rewrite <- (
                  f_equal
                    (
                      fun w :
@@ -286,11 +271,7 @@ Section GenProd_Eq_Complete.
                           (HProd (fun f : Arrow J =>
                                     (D _o)%object (Targ f))) D_imgs_Cone )
                    )
-              );
-            clearbody H; cbn in H.
-          repeat rewrite assoc_sym in H.
-          repeat rewrite assoc_sym.
-          etransitivity; [|apply H]; clear H.
+              ).
           set (H :=
                  f_equal
                    (
@@ -306,9 +287,7 @@ Section GenProd_Eq_Complete.
               );
             clearbody H; cbn in H.
           rewrite From_Term_Cat in H; simpl_ids in H.
-          repeat rewrite assoc_sym in H.
-          repeat rewrite assoc_sym.
-          etransitivity; [|apply H]; clear H.
+          a_rewrite <- H.
           cbn_rewrite <- (@Trans_com _ _ _ _ Cn).
           rewrite From_Term_Cat; auto.
         Qed.
@@ -432,17 +411,13 @@ Section GenProd_Eq_Complete.
           apply NatTrans_eq_simplify.
           extensionality x.
           cbn.
-          set (H :=
+          a_rewrite (
                  f_equal
                    (fun w : ((Cn ∘ (Functor_To_1_Cat J)) –≻ D)%nattrans =>
                       Trans w x)
                    (cone_morph_com h)
               ).
-          cbn in H.
-          simpl_ids in H.
-          rewrite From_Term_Cat; simpl_ids.
-          rewrite assoc in H.
-          trivial.
+          now a_rewrite From_Term_Cat; simpl_ids.          
         Qed.
 
       End Cone_Morph_to_Lim_Cone_Cone_Morph_to_OPR.
