@@ -31,6 +31,7 @@ Record Functor (C C' : Category) : Type :=
  categories (preserving the structure of categories!)*)
 }.
 
+Arguments Functor _%category _%category.
 Arguments FO {_ _} _ _.
 Arguments FA {_ _} _ {_ _} _, {_ _} _ _ _ _.
 Arguments F_id {_ _} _ _.
@@ -40,11 +41,11 @@ Notation "C –≻ D" := (Functor C D) : functor_scope.
 
 Bind Scope functor_scope with Functor.
 
-Notation "F '_o'" := (FO F) : object_scope.
+Notation "F '_o'" := (FO F).
 
-Notation "F '@_a'" := (@FA _ _ F) : morphism_scope.
+Notation "F '@_a'" := (@FA _ _ F).
 
-Notation "F '_a'" := (FA F) : morphism_scope.
+Notation "F '_a'" := (FA F).
 
 Hint Extern 2 => (apply F_id).
 

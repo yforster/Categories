@@ -35,23 +35,23 @@ F _o (c,c')                                               G _o (c',c)
 #
 Trans_com_sym is the symmetric form of Trans_com.
 *)
-  Record DinatTrans (F G : ((C × C^op)%category –≻ D)%functor) :=
+  Record DinatTrans (F G : ((C × C^op) –≻ D)%functor) :=
     {
-      Trans (c : C) : ((F _o (c,c)) –≻ (G _o (c,c)))%object%morphism;
+      Trans (c : C) : ((F _o (c,c)) –≻ (G _o (c,c)))%morphism;
 
       Trans_com {c c' : C} (h : (c –≻ c')%morphism) :
         (
           (G @_a (c',c') (c', c) (id, h)) ∘ (Trans c') ∘ (F @_a (c,c') (c',c') (h, id C c'))
           =
           (G @_a (c ,c ) (c', c) (h, id)) ∘ (Trans c ) ∘ (F  @_a (c,c') (c ,c ) (id, h))
-        )%morphism%functor;
+        )%morphism;
 
       Trans_com_sym {c c' : C} (h : (c –≻ c')%morphism) :
         (
           (G @_a (c ,c ) (c', c) (h, id)) ∘ (Trans c ) ∘ (F  @_a (c,c') (c ,c ) (id, h))
           =
           (G @_a (c',c') (c', c) (id, h)) ∘ (Trans c') ∘ (F @_a (c,c') (c',c') (h, id C c'))
-        )%morphism%functor;
+        )%morphism;
     }.
 
   Notation "F –≻ G" := (DinatTrans F G) : dinattrans_scope.
