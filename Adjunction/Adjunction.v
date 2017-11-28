@@ -1,3 +1,4 @@
+From Categories Require Import Essentials.AssocRewrite.
 From Categories Require Import Essentials.Notations.
 From Categories Require Import Essentials.Types.
 From Categories Require Import Essentials.Facts_Tactics.
@@ -149,29 +150,23 @@ Section Adjunction.
     Next Obligation.
     Proof.
       intros c d f; cbn.
-      rewrite F_compose; rewrite assoc.
-      cbn_rewrite <- (Trans_com (ucu_adj_unit Adj) f).
-      rewrite assoc_sym.
-      set (W := f_equal (fun w => Trans w d) (ucu_adj_right_id Adj));
-        cbn in W; repeat rewrite F_id in W; simpl_ids in W; rewrite W.
+      a_rewrite <- (Trans_com (ucu_adj_unit Adj) f).
+      a_rewrite (f_equal (fun w => Trans w d) (ucu_adj_right_id Adj)).
       auto.
-    Qed.      
-
+    Qed.
+    
     Next Obligation.
     Proof.
       intros c d f g h H1 H2; cbn in *.
       rewrite H1 in H2; clear H1.
       apply (f_equal (F _a)%morphism) in H2.
-      do 2 rewrite F_compose in H2.
+      do_simpl_in H2.
       apply (f_equal (fun w => compose w (Trans (ucu_adj_counit Adj) _))) in H2;
         cbn in H2.
       repeat rewrite assoc_sym in H2.
-     cbn_rewrite (@Trans_com _ _ _ _ (ucu_adj_counit Adj) _ _ g) in H2.
+      cbn_rewrite (@Trans_com _ _ _ _ (ucu_adj_counit Adj) _ _ g) in H2.
       cbn_rewrite (@Trans_com _ _ _ _ (ucu_adj_counit Adj) _ _ h) in H2.
-      repeat rewrite assoc in H2.
-      set (W := f_equal (fun w => Trans w c) (ucu_adj_left_id Adj));
-        cbn in W; repeat rewrite F_id in W; simpl_ids in W; rewrite W in H2;
-        clear W.
+      a_rewrite (f_equal (fun w => Trans w c) (ucu_adj_left_id Adj)) in H2.
       auto.
     Qed.
 
@@ -194,12 +189,9 @@ Section Adjunction.
     Proof.    
       intros d d' h; cbn.
       eapply (@adj_morph_unique Adj); [reflexivity|]; cbn.
-      repeat rewrite F_compose.
-      repeat rewrite assoc.
-      cbn_rewrite <- (@Trans_com _ _ _ _ (adj_unit Adj) _ _ ((G @_a) d d' h)).
-      cbn_rewrite <- (@adj_morph_com Adj (G _o d) d id).
-      rewrite assoc_sym.
-      cbn_rewrite <- (@adj_morph_com Adj (G _o d') d' id).
+      a_rewrite <- (@Trans_com _ _ _ _ (adj_unit Adj) _ _ ((G @_a) d d' h)).
+      a_rewrite <- (@adj_morph_com Adj (G _o d) d id).
+      a_rewrite <- (@adj_morph_com Adj (G _o d') d' id).
       auto.
     Qed.
 
@@ -214,23 +206,17 @@ Section Adjunction.
       apply NatTrans_eq_simplify; extensionality x.
       cbn; simpl_ids.
       eapply (@adj_morph_unique Adj); [reflexivity|]; cbn.
-      rewrite F_compose.
-      rewrite F_id.
-      rewrite assoc.
-      cbn_rewrite <- (@Trans_com
-                       _ _ _ _ (adj_unit Adj) _ _ (Trans (adj_unit Adj) x)). 
-      rewrite assoc_sym.
-      simpl_ids; trivial.
-      symmetry.
-      apply adj_morph_com.
+      repeat rewrite F_compose.
+      repeat rewrite assoc.
+      a_rewrite <- (@Trans_com
+                     _ _ _ _ (adj_unit Adj) _ _ (Trans (adj_unit Adj) x)).
+      now a_rewrite <- adj_morph_com. 
     Qed.
 
     Next Obligation.
     Proof.
       apply NatTrans_eq_simplify; FunExt; cbn.
-      repeat rewrite F_id; simpl_ids.
-      symmetry.
-      apply adj_morph_com.
+      a_rewrite <- adj_morph_com.
     Qed.
 
   End Adj_UCU_Adj.
@@ -275,17 +261,13 @@ Section Adjunction.
       intros [c1 d1] [c2 d2] [h1 h2].
       extensionality x; cbn in *.
       eapply adj_morph_unique; eauto.
-      simpl_ids.
-      rewrite <- adj_morph_com.
-      repeat rewrite F_compose.
-      repeat rewrite assoc.
+      a_rewrite <- adj_morph_com.
       refine (@f_equal _ _ (fun x => @compose _ _ _ _ x _) _ _ _).
       change (G _a (F _a h1))%morphism with ((G ∘ F) _a h1)%morphism.
       refine (eq_trans _ (@f_equal
                             _ _ (fun x => @compose _ _ _ _ x _)
                             _ _ (Trans_com (adj_unit Adj) h1))).
-      rewrite assoc_sym.
-      rewrite <- adj_morph_com; trivial.
+      now a_rewrite <- adj_morph_com.
     Qed.
 
     Next Obligation. (* Trans_com *)
@@ -333,12 +315,8 @@ Section Adjunction.
                                _ _ _ _ (iso_morphism Adj) (c, F _o c)%object
                                (c, F _o c')%object (id c, F _a h)%morphism) id)
           ).
-      cbn in *.
-      rewrite F_id in H.
-      rewrite F_id in H'.
-      simpl_ids in H.
-      simpl_ids in H'.
-      rewrite <- H; trivial.
+      do_simpl_in H'.
+      a_rewrite <- H; trivial.
     Qed.
 
     Next Obligation.
@@ -353,15 +331,12 @@ Section Adjunction.
                   _ _ _ _ (@Trans_com
                              _ _ _ _ (iso_morphism Adj)
                              (c, F _o c)%object (c, d)
-                             (id, Trans (inverse_morphism Adj) (c, d) f)) id);
-        cbn in H.
-      rewrite F_id in H.
-      simpl_ids in H.
+                             (id, Trans (inverse_morphism Adj) (c, d) f)) id).
+      do_simpl_in H.
       etransitivity; [|eassumption].
       change (f = Trans (NatTrans_compose
                            (inverse_morphism Adj) (iso_morphism Adj)) (_, _) f).
-      set (H' := right_inverse Adj); cbn in H'.
-      rewrite H'.
+      cbn_rewrite (right_inverse Adj). 
       cbn; auto.
     Qed.
 
@@ -373,21 +348,17 @@ Section Adjunction.
            = Trans (NatTrans_compose
                       (iso_morphism Adj) (inverse_morphism Adj)) (_, _) h);
         [intros H'|].
-      + set (H'' := left_inverse Adj); cbn in H''.
-        rewrite H'' in H'.
+      + cbn_rewrite (left_inverse Adj) in H'.
         cbn in H'; auto.
-      + set (Hg := @equal_f
+      + cbn.
+        a_rewrite (@equal_f
                      _ _ _ _ (@Trans_com
                                 _ _ _ _ (iso_morphism Adj) (c, F _o c)%object
-                                (c, d) (id, g)) id); cbn in Hg;
-        rewrite F_id in Hg; simpl_ids in Hg.
-        set (Hh := @equal_f
+                                (c, d) (id, g)) id).
+        a_rewrite (@equal_f
                      _ _ _ _ (@Trans_com
                                 _ _ _ _ (iso_morphism Adj) (c, F _o c)%object
-                                (c, d) (id, h)) id); cbn in Hh;
-        rewrite F_id in Hh; simpl_ids in Hh.
-        cbn.
-        rewrite Hg, Hh; rewrite <- H1, <- H2; trivial.
+                                (c, d) (id, h)) id).
     Qed.        
 
   End Hom_Adj_Adj.

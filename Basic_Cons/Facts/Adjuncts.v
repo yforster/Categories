@@ -95,6 +95,7 @@ Section Sum_Adj.
 
   Next Obligation.
   Proof.
+    destruct f.
     match goal with
       [|- (?A, ?B) = (?C, ?D)] => cutrewrite(C = A); [cutrewrite (D = B)|]; trivial
     end.

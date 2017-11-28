@@ -1,3 +1,4 @@
+From Categories Require Import Essentials.AssocRewrite.
 From Categories Require Import Essentials.Notations.
 From Categories Require Import Essentials.Types.
 From Categories Require Import Essentials.Facts_Tactics.
@@ -380,11 +381,8 @@ Section Limits.
       extensionality x.
       cbn in *.
       destruct x; auto.
-      rewrite assoc_sym.
-      cbn_rewrite (@Trans_com _ _ _ _ L true false false).
-      rewrite assoc.
-      rewrite H1; rewrite <- H2.
-      trivial.
+      a_rewrite (@Trans_com _ _ _ _ L true false false). 
+      now rewrite H1; rewrite <- H2.
     Qed.
       
     Program Definition Equalizer_as_Limit : Equalizer f g :=
@@ -403,7 +401,7 @@ Section Limits.
     Proof.
       set (H := @Trans_com _ _ _ _ L true false false).
       cbn in H.
-      cbn_rewrite (@Trans_com _ _ _ _ L true false true) in H.
+      a_rewrite (@Trans_com _ _ _ _ L true false true) in H.
       trivial.
     Qed.
 
@@ -579,11 +577,8 @@ Section Limits.
       extensionality x.
       cbn in *.
       destruct x; auto.
-      rewrite assoc_sym.
-      cbn_rewrite (@Trans_com _ _ _ _ L PB_B PB_C tt).
-      rewrite assoc.
-      rewrite H1; rewrite <- H3.
-      trivial.
+      a_rewrite (@Trans_com _ _ _ _ L PB_B PB_C tt).
+      now rewrite H1; rewrite <- H3.
     Qed.
     
     Program Definition PullBack_as_Limit : PullBack f g :=
