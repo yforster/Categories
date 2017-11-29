@@ -47,6 +47,7 @@ Coq_Cats/Type_Cat/GenProd.v
 Coq_Cats/Type_Cat/Facts.v
 Coq_Cats/Type_Cat/Card_Restriction.v
 Coq_Cats/Type_Cat/Equalizer.v
+Coq_Cats/Type_Cat/CoEqualizer.v
 Coq_Cats/Type_Cat/Complete.v
 Coq_Cats/Type_Cat/PullBack.v
 Coq_Cats/Type_Cat/LCCC.v
